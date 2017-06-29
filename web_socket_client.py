@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 '''
 setup installing the python modules
 sudo -H pip3 install bottle gevent gevent-websocket

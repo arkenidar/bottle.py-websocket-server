@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript">
-    var ws = new WebSocket("ws://localhost:8080/websocket");
-    ws.onopen = function() {
-        ws.send("Hello, world");
-    };
-    ws.onmessage = function (evt) {
-        alert(evt.data);
-    };
-  </script>
+<meta charset="utf-8">
 </head>
+<body>
+<form id="send_form"><input id="text_to_send" value="123"><button type="submit" id="send_button">send</button></form>
+<div id="console_output"></div>
+<script type="text/javascript">
+
+function id(id){
+  return document.getElementById(id);
+}
+
+function escape_html_tag(unescaped_text){
+    return unescaped_text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function log(data){
+    id('console_output').innerHTML += escape_html_tag(JSON.stringify(data)) + '<br>';
+    console.log(data)
+}
+
+var ws = new WebSocket("ws://localhost:8080/websocket");
+
+function onsubmit_handler(){
+  ws.send(id('text_to_send').value);
+  return false;
+}
+id('send_form').onsubmit = onsubmit_handler;
+  
+ws.onopen = function() {
+  log('open');
+  onsubmit_handler();
+}
+
+ws.onmessage = function (evt) {
+  var data = evt.data;
+  log(data);
+}
+</script>
+
+</body>
 </html>
